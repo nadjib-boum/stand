@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getServerSession, type AuthOptions } from "next-auth";
 import bcrypt from "bcrypt";
 import db from "@/utils/db";
-import type { User } from "@prisma/client";
 import { sleep } from "@/helpers";
 
 export const authOptions: AuthOptions = {

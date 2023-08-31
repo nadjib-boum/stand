@@ -1,5 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 import ModalProvider from "@/providers/ModalsProvider";
 import Navbar from "@/components/Navbar";
 import { Poppins } from "next/font/google";
@@ -30,6 +31,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <SessionProvider session={pageProps.session}>
       <QueryClientProvider client={qc}>
+        <Toaster />
         <main className={font.className}>
           <Navbar />
           <ModalProvider />

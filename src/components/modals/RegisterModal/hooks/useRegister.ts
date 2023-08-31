@@ -23,12 +23,17 @@ const useLogin = () => {
   const { mutate: register, isLoading } = useMutation({
     mutationFn: registerUser,
     onSuccess: async (data) => {
-      const { email, password } = form.getValues();
-      await signIn("credentials", {
-        email,
-        password,
-        redirect: true,
-      });
+      try {
+        const { email, password } = form.getValues();
+        await signIn("credentials", {
+          email,
+          password,
+          redirect: true,
+        });
+      } catch (err) {
+        console.log(err);
+        return Promise.reject(err);
+      }
     },
     onError: (err: APIError) => {
       const { code } = err.response?.data!;

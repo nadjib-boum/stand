@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import { toast } from "react-hot-toast";
 import { type LoginSchema, loginSchema } from "../types";
 
 const useLogin = () => {
@@ -16,12 +17,23 @@ const useLogin = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onSubmit = useCallback(async (data: LoginSchema) => {
-    setIsLoading(true);
-    await signIn("credentials", {
-      ...data,
-      redirect: true,
-    });
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const signin = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+      if (!signin?.ok) {
+        throw new Error(signin?.error!);
+      }
+    } catch (err) {
+      if (err instanceof Error && err.message === "Invalid credentials") {
+        toast.error("Invalid credentials");
+      }
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   return { form, onSubmit, isLoading };
